@@ -1,8 +1,8 @@
 package routes
 
 import (
+	"backend/api"
 	"backend/config"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,11 +14,14 @@ func InitRuter() {
 
 	router := r.Group("/api")
 	{
-		router.GET("hello", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": "ok",
-			})
-		})
+		//User路由
+		user := router.Group("/user")
+		{
+			user.POST("/add", api.AddUser)
+			user.DELETE("/delete/:name", api.DeleteUser)
+		}
+		//Post路由
+		//Category路由
 	}
 
 	r.Run(config.GlobalConfig.Server.HttpPort)

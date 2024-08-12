@@ -3,6 +3,7 @@ package model
 import (
 	"backend/config"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,10 +17,13 @@ func InitDb() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		dbConfig.DbHost, dbConfig.DbPort, dbConfig.DbUser, dbConfig.DbPassWord, dbConfig.DbName)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(dsn))
 	if err != nil {
 		panic("failed to connect database")
 	}
-	db.AutoMigrate(&User{}, &Post{}, &Category{})
-
+	err = db.AutoMigrate(&User{}, &Post{}, &Category{})
+	if err != nil {
+		log.Fatalf("failed to auto-migrate: %v", err)
+	}
 }

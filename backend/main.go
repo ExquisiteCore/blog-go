@@ -7,11 +7,11 @@ import (
 )
 
 func init() {
-
+	config.Init()  //配置文件初始化
+	model.InitDb() //数据库初始化
 }
 
 func main() {
-	config.Init()      //配置文件初始化
-	model.InitDb()     //数据库初始化
+
 	routes.InitRuter() //路由初始化
 }

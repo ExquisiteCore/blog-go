@@ -1,22 +1,58 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"backend/model"
+	"backend/weberr"
+	"net/http"
 
-//添加用户
+	"github.com/gin-gonic/gin"
+)
+
+// 添加用户
 func AddUser(c *gin.Context) {
+
+	var data model.User
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": weberr.DATABASE_ERROR,
+			"msg":  weberr.GetErr(weberr.DATABASE_ERROR),
+		})
+		return
+	}
+
+	code := model.CheckUserExists(data.Username)
+	if code == weberr.USER_NOT_FOUND {
+		code = model.CreateUser(&data)
+	}
+	if code == weberr.USER_ALREADY_EXISTS {
+		code = weberr.USER_ALREADY_EXISTS
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"data": data,
+		"msg":  weberr.GetErr(code),
+	})
 }
 
-//删除用户
+// 删除用户
 func DeleteUser(c *gin.Context) {
 
-}
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"code": weberr.INVALID_ID,
+	// 		"msg":  weberr.GetErr(weberr.INVALID_ID),
+	// 	})
+	// 	return
+	// }
 
-//修改用户
-func UpdateUser(c *gin.Context) {
+	code := model.DeleteUser(c.Param("name"))
 
-}
-
-//查询用户是否存在
-func UserExists(c *gin.Context) {
-
+	c.JSON(
+		http.StatusOK, gin.H{
+			"code": code,
+			"msg":  weberr.GetErr(code),
+		},
+	)
 }
