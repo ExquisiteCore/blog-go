@@ -25,8 +25,8 @@ func AddUser(c *gin.Context) {
 	if code == weberr.USER_NOT_FOUND {
 		code = model.CreateUser(&data)
 	}
-	if code == weberr.USER_ALREADY_EXISTS {
-		code = weberr.USER_ALREADY_EXISTS
+	if code == weberr.USER_NOT_FOUND {
+		code = weberr.SUCCESS
 	}
 
 	c.JSON(http.StatusOK, gin.H{
