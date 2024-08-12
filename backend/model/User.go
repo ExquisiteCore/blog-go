@@ -2,6 +2,7 @@ package model
 
 import (
 	"backend/weberr"
+	"errors"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -56,3 +57,52 @@ func DeleteUser(name string) int {
 
 	return weberr.SUCCESS
 }
+
+// CheckLogin 后台登录验证
+// func CheckLogin(username string, password string) (User, int) {
+// 	var user User
+// 	var PasswordErr error
+
+// 	db.Where("username = ?", username).First(&user)
+
+// 	PasswordErr = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+// 	if user.ID == 0 {
+// 		return user, errmsg.ERROR_USER_NOT_EXIST
+// 	}
+// 	if PasswordErr != nil {
+// 		return user, errmsg.ERROR_PASSWORD_WRONG
+// 	}
+// 	if user.Role != 1 {
+// 		return user, errmsg.ERROR_USER_NO_RIGHT
+// 	}
+// 	return user, errmsg.SUCCESS
+// }
+
+// CheckLoginFront 前台登录
+func CheckLoginFront(username string, password string) (User, int) {
+	var user User
+
+	db.Where("username = ?", username).First(&user)
+
+	//PasswordErr = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err := ComparePasswords(user.Password, password)
+	if user.ID == 0 {
+		return user, weberr.USER_NOT_FOUND
+	}
+	if err != nil {
+		return user, weberr.INVALID_PASSWORD
+	}
+	return user, weberr.SUCCESS
+}
+
+func ComparePasswords(storedPassword, inputPassword string) error {
+	if storedPassword == inputPassword {
+		return nil
+	}
+	return ErrWrongPassword
+}
+
+var (
+	ErrWrongPassword = errors.New("密码错误。")
+)
