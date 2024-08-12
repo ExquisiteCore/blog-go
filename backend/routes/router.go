@@ -13,6 +13,8 @@ func InitRuter() {
 
 	r := gin.Default()
 
+	r.Use(middleware.Cors())
+
 	authrouter := r.Group("/api")
 	{
 		authrouter.Use(middleware.JwtToken())
