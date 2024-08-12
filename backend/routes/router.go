@@ -21,6 +21,13 @@ func InitRuter() {
 			user.DELETE("/delete/:name", api.DeleteUser)
 		}
 		//Post路由
+		Post := router.Group("/post")
+		{
+			Post.POST("/add", api.AddPost)
+			Post.DELETE("/delete/:id", api.DeletePost)
+			Post.GET("/get", api.GetPost)
+			Post.GET("/get/:id", api.GetPostInfo)
+		}
 		//Category路由
 		Category := router.Group("/category")
 		{
