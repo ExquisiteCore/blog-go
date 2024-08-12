@@ -19,7 +19,6 @@ func InitRuter() {
 		//User路由
 		user := authrouter.Group("/user")
 		{
-			user.POST("/add", api.AddUser)
 			user.DELETE("/delete/:name", api.DeleteUser)
 		}
 		//Post路由
@@ -36,7 +35,10 @@ func InitRuter() {
 		}
 	}
 	public := r.Group("/api")
-	{ //Post路由
+	{
+		public.POST("/user/add", api.AddUser)
+		public.POST("/login", api.Login)
+		//Post路由
 		Post := public.Group("/post")
 		{
 			Post.GET("/get", api.GetPost)
