@@ -22,6 +22,13 @@ func InitRuter() {
 		}
 		//Post路由
 		//Category路由
+		Category := router.Group("/category")
+		{
+			Category.POST("/add", api.AddCategory)
+			Category.DELETE("/delete/:name", api.DeleteCategory)
+			Category.GET("/get", api.GetCate)
+			Category.GET("/get/:name", api.GetCateInfo)
+		}
 	}
 
 	r.Run(config.GlobalConfig.Server.HttpPort)

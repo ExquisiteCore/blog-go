@@ -25,9 +25,11 @@ const (
 	USER_ALREADY_EXISTS = 1001 // Custom code for user already exists
 	INVALID_PASSWORD    = 1002 // Custom code for incorrect password
 	// Additional Server Errors
-	DATABASE_ERROR = 1003 // Custom code for database error
-	USER_NOT_FOUND = 1004
-	INVALID_ID     = 1005
+	DATABASE_ERROR          = 1003 // Custom code for database error
+	USER_NOT_FOUND          = 1004
+	INVALID_ID              = 1005
+	CATEGORY_NOT_FOUND      = 1006
+	CATEGORY_ALREADY_EXISTS = 1007
 )
 
 type ErrorCode struct {
@@ -53,6 +55,8 @@ var errorCodes = map[int]ErrorCode{
 	1003: {1003, "数据库错误"},
 	1004: {1004, "用户不存在"},
 	1005: {1005, "无效的用户ID"},
+	1006: {1006, "分类不存在"},
+	1007: {1007, "分类已存在"},
 }
 
 func GetErr(code int) string {
