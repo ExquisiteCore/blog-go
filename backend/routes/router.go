@@ -3,6 +3,7 @@ package routes
 import (
 	"backend/api"
 	"backend/config"
+	"backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,27 +13,38 @@ func InitRuter() {
 
 	r := gin.Default()
 
-	router := r.Group("/api")
+	authrouter := r.Group("/api")
 	{
+		authrouter.Use(middleware.JwtToken())
 		//User路由
-		user := router.Group("/user")
+		user := authrouter.Group("/user")
 		{
 			user.POST("/add", api.AddUser)
 			user.DELETE("/delete/:name", api.DeleteUser)
 		}
 		//Post路由
-		Post := router.Group("/post")
+		Post := authrouter.Group("/post")
 		{
 			Post.POST("/add", api.AddPost)
 			Post.DELETE("/delete/:id", api.DeletePost)
+		}
+		//Category路由
+		Category := authrouter.Group("/category")
+		{
+			Category.POST("/add", api.AddCategory)
+			Category.DELETE("/delete/:name", api.DeleteCategory)
+		}
+	}
+	public := r.Group("/api")
+	{ //Post路由
+		Post := public.Group("/post")
+		{
 			Post.GET("/get", api.GetPost)
 			Post.GET("/get/:id", api.GetPostInfo)
 		}
 		//Category路由
-		Category := router.Group("/category")
+		Category := public.Group("/category")
 		{
-			Category.POST("/add", api.AddCategory)
-			Category.DELETE("/delete/:name", api.DeleteCategory)
 			Category.GET("/get", api.GetCate)
 			Category.GET("/get/:name", api.GetCateInfo)
 		}
