@@ -11,7 +11,13 @@ func GetPost(c *gin.Context) {
 }
 
 //查询文章列表
+func GetPostList(c *gin.Context) {
+}
 
 //编辑文章
+func EditPost(c *gin.Context) {
+}
 
 //删除文章
+func DeletePost(c *gin.Context) {
+}
